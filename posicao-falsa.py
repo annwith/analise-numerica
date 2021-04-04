@@ -1,6 +1,7 @@
 import math
 
 # Definir o número de casas de precisão pra fazer os cálculos
+# Verificação de loop infinito? Limite de iterações?
 def posicao_falsa(funcao, a, b, precisao):
     # Garantir a < b e a != b
     if a > b:
@@ -14,8 +15,13 @@ def posicao_falsa(funcao, a, b, precisao):
     iteracao = 0
     f_a = funcao(a)
     f_b = funcao(b)
+    d_absoluta = abs(a-b)
+    if a != 0:
+        d_relativa = abs((a-b)/a)
+    else:
+        d_relativa = None
     
-    it.append([iteracao, a, b, f_a, f_b])
+    it.append([iteracao, a, b, f_a, f_b, d_absoluta, d_relativa])
     
     repeat = False
     if (abs(f_a) > precisao and abs(f_b) > precisao):
@@ -37,7 +43,13 @@ def posicao_falsa(funcao, a, b, precisao):
             a = c
             f_a = funcao(a)
 
-        it.append([iteracao, a, b, f_a, f_b])
+        d_absoluta = abs(a-b)
+        if a != 0:
+            d_relativa = abs((a-b)/a)
+        else:
+            d_relativa = None
+
+        it.append([iteracao, a, b, f_a, f_b, d_absoluta, d_relativa])
 
         repeat = False
         if (abs(f_a) > precisao and abs(f_b) > precisao):
