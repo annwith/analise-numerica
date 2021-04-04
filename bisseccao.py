@@ -7,7 +7,7 @@ def intervalo_zero(funcao, a, b):
     return False
 
 # Definir o número de casas de precisão pra fazer os cálculos
-def bisseccao(funcao, a, b, precisao_c=None, distancia_absoluta=None, distancia_relativa=None):
+def bisseccao(funcao, a, b, precisao=None, distancia_absoluta=None, distancia_relativa=None):
     # Garantir a < b e a != b
     if a > b:
         [a, b] = [b, a]
@@ -33,7 +33,7 @@ def bisseccao(funcao, a, b, precisao_c=None, distancia_absoluta=None, distancia_
         repeat = True
     if (a != 0 and distancia_relativa != None and d_relativa > distancia_relativa):
         repeat = True
-    if (precisao_c != None and abs(f_a) > precisao_c and abs(f_b) > precisao_c):
+    if (precisao != None and abs(f_a) > precisao and abs(f_b) > precisao):
         repeat = True
 
     # Loop
@@ -64,7 +64,7 @@ def bisseccao(funcao, a, b, precisao_c=None, distancia_absoluta=None, distancia_
             repeat = True
         if (a != 0 and distancia_relativa != None and d_relativa > distancia_relativa):
             repeat = True
-        if (precisao_c != None and abs(f_c) > precisao_c):
+        if (precisao != None and abs(f_c) > precisao):
             repeat = True
     
     return it
