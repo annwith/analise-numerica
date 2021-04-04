@@ -7,6 +7,7 @@ def intervalo_zero(funcao, a, b):
     return False
 
 # Definir o número de casas de precisão pra fazer os cálculos
+# Verificação de loop infinito? Limite de iterações?
 def bisseccao(funcao, a, b, precisao=None, distancia_absoluta=None, distancia_relativa=None):
     # Garantir a < b e a != b
     if a > b:
@@ -28,6 +29,8 @@ def bisseccao(funcao, a, b, precisao=None, distancia_absoluta=None, distancia_re
     
     it.append([iteracao, a, b, f_a, f_b, d_absoluta, d_relativa])
     
+    # Verificação de condição de parada (precisão/distância)
+    # Se houver mais de uma condição, todas devem ser satisfeitas
     repeat = False
     if (distancia_absoluta != None and d_absoluta > distancia_absoluta):
         repeat = True
@@ -59,6 +62,8 @@ def bisseccao(funcao, a, b, precisao=None, distancia_absoluta=None, distancia_re
 
         it.append([iteracao, a, b, f_a, f_b, d_absoluta, d_relativa])
 
+        # Verificação de condição de parada (precisão/distância)
+        # Se houver mais de uma condição, todas devem ser satisfeitas
         repeat = False
         if (distancia_absoluta != None and d_absoluta > distancia_absoluta):
             repeat = True
