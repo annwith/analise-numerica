@@ -18,6 +18,7 @@ def newton_raphson(funcao, f_der, a, precisao):
         f_a = funcao(a)
         it.append([a, f_a])
 
+        # Verificar se está convergindo
         if iteracao > 1:
             d_anterior = abs(it[iteracao-2][0]-it[iteracao-1][0])
             d_atual = abs(it[iteracao-1][0]-it[iteracao][0])

@@ -43,9 +43,3 @@ def secante(funcao, a, b, precisao):
             break
     
     return it
-
-def funcao(x):
-    return x**2+x-6
-
-it = secante(funcao, 1.5, 2.5, 0.001)
-print(it)
