@@ -1,11 +1,5 @@
 import math
 
-# Definir se existe 0 em um intervalo
-def intervalo_zero(funcao, a, b):
-    if funcao(a) * funcao(b) < 0:
-        return True
-    return False
-
 # Definir o número de casas de precisão pra fazer os cálculos
 # Verificação de loop infinito? Limite de iterações?
 def bisseccao(funcao, a, b, precisao=None, distancia_absoluta=None, distancia_relativa=None):
