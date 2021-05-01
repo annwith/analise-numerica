@@ -4,11 +4,14 @@ def intervalo_zero(funcao, a, b):
         return True
     return False
 
-# Tirar 0 da diagonal
-def pivotamento(m):
+# Tirar 0 da diagonal - Evitar divisão por 0
+def zeros_diagonal(m):
     for i in range(0, m.shape[0]):
         if m[i][i] == 0: # qual precisão considera 0?
             for j in range(0, m.shape[0]):
                 if m[j][i] != 0: # qual precisão considera 0?
                     # trocar linhas do array
                     m[[i, j]] = m[[j, i]]
+
+# Colocar os maiores valores possíveis na diagonal
+# Pivoteamento
