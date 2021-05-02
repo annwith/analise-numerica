@@ -27,6 +27,7 @@ Em todos os métodos, o retorno é um valor próximo da raiz.
 * Verificação do determinante
 * Divisão por zero
 * Verificar convergência
+* Tipar meus argumentos
 
 ## Motivos de escolher a linguagem Python
 * broadcast
@@ -34,3 +35,5 @@ Em todos os métodos, o retorno é um valor próximo da raiz.
 * NumPy
 * matplotlib
 * Domínio da linguagem
+* facilidade de lidar com arquivos e strings
+* precisão
