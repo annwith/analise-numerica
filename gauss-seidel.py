@@ -17,10 +17,10 @@ def gauss_seidel(m):
         for i in range(m.shape[0]):
             x2[:, i] = (b[i]-np.sum(a[i, :]*x2[i, :]))/np.diagonal(m)[i]
         
-        print(x2)
+        # print(x2)
         np.fill_diagonal(x2, 0)
         d2 = np.absolute(x2-x1)
-        print(d2)
+        # print(d2)
         if np.all(d2 < 0.001):
             x1 = np.copy(x2)
             break
@@ -37,10 +37,3 @@ def gauss_seidel(m):
     x[0] = x1[1][0]
 
     return x
-
-m1 = [[3, -0.1, -0.2, -0.3, 7.85], [0.1, 7, -0.3, 0.3, -19.3], [0.3, -0.2, 10, 0.2, 71.4], [0.1, 0.4, -0.3, 12, 39.3]]
-m2 = [[3, -0.1, -0.2, 7.85], [0.1, 7, -0.3, -19.3], [0.3, -0.2, 10, 71.4]]
-m3 = [[0.1, 7, -19.3], [3, -0.2, 7.85]]
-m2 = np.asarray(m2)
-x = gauss_seidel(m2)
-print(x)
