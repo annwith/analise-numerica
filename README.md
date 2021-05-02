@@ -19,7 +19,18 @@ Em todos os métodos, o retorno é um valor próximo da raiz.
 * Gauss-Seidel
 
 ## Extras
+* Verificações de entrada e formato de matrizes
 * Gráficos
-* Pivoteamento
+* Pivoteamento - Erros de arredondamento
 * Verificação de matriz mal condicionada
 * Consertar matrizes mal condicionadas quando possível
+* Verificação do determinante
+* Divisão por zero
+* Verificar convergência
+
+## Motivos de escolher a linguagem Python
+* broadcast
+* multiplicação de matrizes element wise
+* NumPy
+* matplotlib
+* Domínio da linguagem
