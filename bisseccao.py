@@ -1,4 +1,6 @@
 import math
+import numpy as np
+from func_input import func_parser 
 
 # Definir o número de casas de precisão pra fazer os cálculos
 # Verificação de loop infinito? Limite de iterações?
@@ -13,8 +15,8 @@ def bisseccao(funcao, a, b, precisao=None, distancia_absoluta=None, distancia_re
     it = []
 
     iteracao = 0
-    f_a = funcao(a)
-    f_b = funcao(b)
+    f_a = solve_func(a, funcao)
+    f_b = solve_func(b, funcao)
     d_absoluta = abs(a-b)
     if a != 0:
         d_relativa = abs((a-b)/a)
@@ -39,14 +41,14 @@ def bisseccao(funcao, a, b, precisao=None, distancia_absoluta=None, distancia_re
 
         # Escolher uma metade
         c = (a+b)/2
-        f_c = funcao(c)
+        f_c = solve_func(c, funcao)
 
         if f_a*f_c < 0:
             b = c
-            f_b = funcao(b)
+            f_b = solve_func(b, funcao)
         else:
             a = c
-            f_a = funcao(a)
+            f_a = solve_func(a, funcao)
         
         d_absoluta = abs(a-b)
         if a != 0:
@@ -66,10 +68,48 @@ def bisseccao(funcao, a, b, precisao=None, distancia_absoluta=None, distancia_re
         if (precisao != None and abs(f_c) > precisao):
             repeat = True
     
-    return it
+    return c, it
 
 # Definir o número de iterações necessárias
 def iteracoes_bisseccao(a, b, distancia_absoluta):
     i = abs(a-b)
     n = (math.log(i)-math.log(distancia_absoluta))/math.log(2)
     return n
+
+def solve_func(x, func):
+    func = func.replace('x', str(x))
+    return func_parser(func)
+
+def main():
+    input_txt = open('input-bisec.txt', 'r')
+    output_txt = open('output-bisec.txt', 'w')
+
+    for line in input_txt:
+        output_txt.write(line+'\n')
+        line = line.split(',')
+        func = line[0].split('=')[1]
+        a = float(line[1].split('=')[1])
+        b = float(line[2].split('=')[1])
+        precisao = line[3].split('=')[1]
+        distancia_absoluta = line[4].split('=')[1]
+        distancia_relativa = line[5].split('=')[1]
+        if precisao == 'None':
+            precisao=None
+        else:
+            precisao = float(line[3].split('=')[1])
+        if distancia_absoluta == 'None':
+            distancia_absoluta=None
+        else:
+            distancia_absoluta = float(line[4].split('=')[1])
+        if distancia_relativa == 'None':
+            distancia_relativa=None
+        else:
+            distancia_relativa = float(line[5].split('=')[1])
+
+        x, iteracoes = bisseccao(func, a, b, precisao, distancia_absoluta, distancia_relativa)
+        output_txt.write(str(x)+'\n')
+
+    input_txt.close()
+    output_txt.close()
+
+main()
