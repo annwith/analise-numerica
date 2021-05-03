@@ -1,4 +1,6 @@
 import math
+import numpy as np
+from utils import solve_func
 
 def secante(funcao, a, b, precisao):
     # se a maior que b: trocar
@@ -6,8 +8,8 @@ def secante(funcao, a, b, precisao):
         [a, b] = [b, a]
 
     iteracao = 0
-    f_a = funcao(a)
-    f_b = funcao(b)
+    f_a = solve_func(a, funcao)
+    f_b = solve_func(b, funcao)
     it = []
 
     it.append([a, f_a])
@@ -27,7 +29,7 @@ def secante(funcao, a, b, precisao):
         x_0 = it[-2][0]
         f_x_0 = it[-2][1]
         x_2 = (f_x_1*x_0 - f_x_0*x_1) / (f_x_1 - f_x_0)
-        f_x_2 = funcao(x_2)
+        f_x_2 = solve_func(x_2, funcao)
         it.append([x_2, f_x_2])
 
         # Verificar se está convergindo
@@ -42,4 +44,26 @@ def secante(funcao, a, b, precisao):
         if limite == 4:
             break
     
-    return it
+    return x_2, it
+
+def main():
+    input_txt = open('input-secante.txt', 'r')
+    output_txt = open('output-secante.txt', 'w')
+
+    for line in input_txt:
+        output_txt.write(line+' ')
+        line = line.split(',')
+        func = line[0].split('=')[1]
+        a = float(line[1].split('=')[1])
+        b = float(line[2].split('=')[1])
+        precisao = float(line[3].split('=')[1])
+
+        x, iteracoes = secante(func, a, b, precisao)
+        iteracoes = np.asarray(iteracoes)
+        print(iteracoes)
+        output_txt.write("iteracoes="+str(len(iteracoes))+",resultado="+str(x)+'\n')
+
+    input_txt.close()
+    output_txt.close()
+
+main()

@@ -1,3 +1,10 @@
+from func_input import func_parser 
+
+# Resolver uma função
+def solve_func(x, func):
+    func = func.replace('x', str(x))
+    return func_parser(func)
+
 # Definir se existe 0 em um intervalo
 def intervalo_zero(funcao, a, b):
     if funcao(a) * funcao(b) < 0:
@@ -15,3 +22,7 @@ def zeros_diagonal(m):
 
 # Colocar os maiores valores possíveis na diagonal
 # Pivoteamento
+
+# Calculo do determinante
+
+# Teste do resultado final da matriz

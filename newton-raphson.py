@@ -1,8 +1,10 @@
 import math
+import numpy as np
+from utils import solve_func
 
 def newton_raphson(funcao, f_der, a, precisao):
     iteracao = 0
-    f_a = funcao(a)
+    f_a = solve_func(a, funcao)
     it = []
 
     it.append([a, f_a])
@@ -14,8 +16,8 @@ def newton_raphson(funcao, f_der, a, precisao):
         iteracao += 1
 
         # Atualização do ponto de acordo com a funcao de convergencia
-        a = a - funcao(a)/f_der(a)
-        f_a = funcao(a)
+        a = a - solve_func(a, funcao)/solve_func(a, f_der)
+        f_a = solve_func(a, funcao)
         it.append([a, f_a])
 
         # Verificar se está convergindo
@@ -31,4 +33,26 @@ def newton_raphson(funcao, f_der, a, precisao):
         if limite == 4:
             break
     
-    return it
+    return a, it
+
+def main():
+    input_txt = open('input-newton.txt', 'r')
+    output_txt = open('output-newton.txt', 'w')
+
+    for line in input_txt:
+        output_txt.write(line+' ')
+        line = line.split(',')
+        func = line[0].split('=')[1]
+        f_der = line[1].split('=')[1]
+        a = float(line[2].split('=')[1])
+        precisao = float(line[3].split('=')[1])
+
+        x, iteracoes = newton_raphson(func, f_der, a, precisao)
+        iteracoes = np.asarray(iteracoes)
+        print(iteracoes)
+        output_txt.write("iteracoes="+str(len(iteracoes))+",resultado="+str(x)+'\n')
+
+    input_txt.close()
+    output_txt.close()
+
+main()

@@ -1,6 +1,6 @@
 import math
 import numpy as np
-from func_input import func_parser 
+from utils import solve_func
 
 # Definir o número de casas de precisão pra fazer os cálculos
 # Verificação de loop infinito? Limite de iterações?
@@ -76,16 +76,12 @@ def iteracoes_bisseccao(a, b, distancia_absoluta):
     n = (math.log(i)-math.log(distancia_absoluta))/math.log(2)
     return n
 
-def solve_func(x, func):
-    func = func.replace('x', str(x))
-    return func_parser(func)
-
 def main():
     input_txt = open('input-bisec.txt', 'r')
     output_txt = open('output-bisec.txt', 'w')
 
     for line in input_txt:
-        output_txt.write(line+'\n')
+        output_txt.write(line+' ')
         line = line.split(',')
         func = line[0].split('=')[1]
         a = float(line[1].split('=')[1])
@@ -107,7 +103,9 @@ def main():
             distancia_relativa = float(line[5].split('=')[1])
 
         x, iteracoes = bisseccao(func, a, b, precisao, distancia_absoluta, distancia_relativa)
-        output_txt.write(str(x)+'\n')
+        iteracoes = np.asarray(iteracoes)
+        print(iteracoes)
+        output_txt.write("iteracoes="+str(len(iteracoes))+",resultado="+str(x)+'\n')
 
     input_txt.close()
     output_txt.close()
