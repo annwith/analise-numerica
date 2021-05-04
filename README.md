@@ -30,6 +30,8 @@ Em todos os métodos, o retorno é um valor próximo da raiz.
 * Divisão por zero
 * Verificar convergência
 * Tipar meus argumentos
+* Mostrar as todas as bibliotecas e versões
+* Tipo Decimal (Uau)
 
 ## Motivos de escolher a linguagem Python
 * broadcast
