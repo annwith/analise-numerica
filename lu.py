@@ -37,4 +37,40 @@ def fatoracao_lu(m, lub=False):
         l[:i, i] *= x[-1]
         # print(l)
 
-    return lu, x
+    return lu, np.flip(x)
+
+def main():
+    input_txt = open('input-lu.txt', 'r')
+    output_txt = open('output-lu.txt', 'w')
+    np.set_printoptions(precision=6)
+    np.set_printoptions(suppress=True)
+
+    m = []
+    for line in input_txt:
+        if line[-1] == '\n':
+            line = line[:-1]
+        if line == "False":
+            lub = False
+            break
+        if line == "True":
+            lub = True
+            break
+        m.append(line.split(" "))
+        m[-1] = list(map(lambda x: float(x), m[-1]))
+
+    m = np.asarray(m)
+    # m[:, :-1] = np.linalg.inv(m[:, :-1])
+    lu, x = fatoracao_lu(np.copy(m), lub=lub)
+    output_txt.write(str(lu)+"\n")
+    output_txt.write(str(x)+"\n")
+
+    m[:, :-1] *= x
+    n = np.sum(m[:, :-1], axis=1)
+    n = np.abs(m[:,-1]-n)
+
+    output_txt.write(str(n)+"\n")
+
+    input_txt.close()
+    output_txt.close()
+
+main()

@@ -16,6 +16,7 @@ def newton_raphson(funcao, f_der, a, precisao):
         iteracao += 1
 
         # Atualização do ponto de acordo com a funcao de convergencia
+        print(solve_func(a, f_der))
         a = a - solve_func(a, funcao)/solve_func(a, f_der)
         f_a = solve_func(a, funcao)
         it.append([a, f_a])
@@ -43,7 +44,9 @@ def main():
         output_txt.write(line+' ')
         line = line.split(',')
         func = line[0].split('=')[1]
+        print(func)
         f_der = line[1].split('=')[1]
+        print(f_der)
         a = float(line[2].split('=')[1])
         precisao = float(line[3].split('=')[1])
 

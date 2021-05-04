@@ -1,15 +1,14 @@
 import math
 import numpy as np
 from utils import solve_func
+from utils import intervalo_zero
 
 # Definir o número de casas de precisão pra fazer os cálculos
 # Verificação de loop infinito? Limite de iterações?
 def posicao_falsa(funcao, a, b, precisao):
-    # Garantir a < b e a != b
-    if a > b:
-        [a, b] = [b, a]
-    elif a == b:
-        return "Interval Error"
+    # Garantir que existe uma raíz nesse intervalo
+    if not intervalo_zero(funcao, a, b):
+        return None, None
 
     # Inicialização
     it = []
@@ -30,7 +29,7 @@ def posicao_falsa(funcao, a, b, precisao):
         repeat = True
 
     # Loop
-    while(repeat and a < b):
+    while(repeat and abs(a-b) > 10**-12):
         iteracao += 1
 
         # Escolher 0 entre pontos a e b
@@ -52,6 +51,10 @@ def posicao_falsa(funcao, a, b, precisao):
             d_relativa = None
 
         it.append([iteracao, a, b, f_a, f_b, d_absoluta, d_relativa])
+        print("a "+str(a))
+        print("b "+str(b))
+        print(str(f_a))
+        print(str(f_b))
 
         repeat = False
         if (abs(f_a) > precisao and abs(f_b) > precisao):
@@ -64,6 +67,8 @@ def main():
     output_txt = open('output-pos-falsa.txt', 'w')
 
     for line in input_txt:
+        if line[-1] == '\n':
+            line = line[:-1]
         output_txt.write(line+' ')
         line = line.split(',')
         func = line[0].split('=')[1]
@@ -74,8 +79,9 @@ def main():
         x, iteracoes = posicao_falsa(func, a, b, precisao)
         iteracoes = np.asarray(iteracoes)
         print(iteracoes)
-        output_txt.write("iteracoes="+str(len(iteracoes))+",resultado="+str(x)+'\n')
-
+        f_x = solve_func(x, func)
+        output_txt.write("iteracoes="+str(len(iteracoes))+",x="+str(x)+",f(x)="+str(f_x)+'\n')
+    
     input_txt.close()
     output_txt.close()
 

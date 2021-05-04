@@ -1,15 +1,14 @@
 import math
 import numpy as np
 from utils import solve_func
+from utils import intervalo_zero
 
 # Definir o número de casas de precisão pra fazer os cálculos
 # Verificação de loop infinito? Limite de iterações?
 def bisseccao(funcao, a, b, precisao=None, distancia_absoluta=None, distancia_relativa=None):
-    # Garantir a < b e a != b
-    if a > b:
-        [a, b] = [b, a]
-    elif a == b:
-        return "Interval Error"
+    # Garantir que existe uma raíz nesse intervalo
+    if not intervalo_zero(funcao, a, b):
+        return None, None
 
     # Inicialização
     it = []
@@ -22,9 +21,12 @@ def bisseccao(funcao, a, b, precisao=None, distancia_absoluta=None, distancia_re
         d_relativa = abs((a-b)/a)
     else:
         d_relativa = None
+
+    print(f_a)
+    print(f_b)
     
     it.append([iteracao, a, b, f_a, f_b, d_absoluta, d_relativa])
-    
+
     # Verificação de condição de parada (precisão/distância)
     # Se houver mais de uma condição, todas devem ser satisfeitas
     repeat = False
@@ -35,15 +37,14 @@ def bisseccao(funcao, a, b, precisao=None, distancia_absoluta=None, distancia_re
     if (precisao != None and abs(f_a) > precisao and abs(f_b) > precisao):
         repeat = True
 
-    # Loop
-    while(repeat and a < b):
+    while(repeat and abs(a-b) > 10**-12):
         iteracao += 1
 
         # Escolher uma metade
         c = (a+b)/2
         f_c = solve_func(c, funcao)
 
-        if f_a*f_c < 0:
+        if f_a*f_c < 0.0:
             b = c
             f_b = solve_func(b, funcao)
         else:
@@ -67,8 +68,14 @@ def bisseccao(funcao, a, b, precisao=None, distancia_absoluta=None, distancia_re
             repeat = True
         if (precisao != None and abs(f_c) > precisao):
             repeat = True
+        
+    # escolher o menor
+    if abs(f_a) < abs(f_b):
+        x = a
+    else:
+        x = b
     
-    return c, it
+    return x, it
 
 # Definir o número de iterações necessárias
 def iteracoes_bisseccao(a, b, distancia_absoluta):
@@ -81,6 +88,8 @@ def main():
     output_txt = open('output-bisec.txt', 'w')
 
     for line in input_txt:
+        if line[-1] == '\n':
+            line = line[:-1]
         output_txt.write(line+' ')
         line = line.split(',')
         func = line[0].split('=')[1]
@@ -90,22 +99,29 @@ def main():
         distancia_absoluta = line[4].split('=')[1]
         distancia_relativa = line[5].split('=')[1]
         if precisao == 'None':
-            precisao=None
+            precisao = None
         else:
             precisao = float(line[3].split('=')[1])
         if distancia_absoluta == 'None':
-            distancia_absoluta=None
+            distancia_absoluta = None
         else:
             distancia_absoluta = float(line[4].split('=')[1])
         if distancia_relativa == 'None':
-            distancia_relativa=None
+            distancia_relativa = None
         else:
             distancia_relativa = float(line[5].split('=')[1])
 
         x, iteracoes = bisseccao(func, a, b, precisao, distancia_absoluta, distancia_relativa)
-        iteracoes = np.asarray(iteracoes)
-        print(iteracoes)
-        output_txt.write("iteracoes="+str(len(iteracoes))+",resultado="+str(x)+'\n')
+        if x != None:
+            iteracoes = np.asarray(iteracoes)
+            # print(iteracoes)
+            # Verificação
+            f_x = solve_func(x, func)
+            output_txt.write("iteracoes="+str(len(iteracoes))+",x="+str(x)+",f(x)="+str(f_x)+'\n')
+        else:
+            print("intervalo inválido")
+            output_txt.write("intervalo invalido\n")
+        
 
     input_txt.close()
     output_txt.close()
