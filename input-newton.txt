@@ -1,0 +1,1 @@
+funcao=((sin(x)*cos(x))/((1/1.25)-cos(x)^2))-tan(80/2),funcder=(cos(2*x)*(-cos(x)^2+0.8)-sin(2*x)*sin(x)*cos(x))/(-cos(x)^2+0.8)^2,a=49,precisao=0.001
