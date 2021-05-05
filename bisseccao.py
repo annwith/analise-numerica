@@ -22,9 +22,6 @@ def bisseccao(funcao, a, b, precisao=None, distancia_absoluta=None, distancia_re
     else:
         d_relativa = None
 
-    print(f_a)
-    print(f_b)
-    
     it.append([iteracao, a, b, f_a, f_b, d_absoluta, d_relativa])
 
     # Verificação de condição de parada (precisão/distância)
@@ -86,11 +83,13 @@ def iteracoes_bisseccao(a, b, distancia_absoluta):
 def main():
     input_txt = open('input-bisec.txt', 'r')
     output_txt = open('output-bisec.txt', 'w')
+    np.set_printoptions(precision=6)
+    np.set_printoptions(suppress=True)  
 
     for line in input_txt:
         if line[-1] == '\n':
             line = line[:-1]
-        output_txt.write(line+' ')
+        # output_txt.write(line+' ')
         line = line.split(',')
         func = line[0].split('=')[1]
         a = float(line[1].split('=')[1])
@@ -114,14 +113,14 @@ def main():
         x, iteracoes = bisseccao(func, a, b, precisao, distancia_absoluta, distancia_relativa)
         if x != None:
             iteracoes = np.asarray(iteracoes)
-            # print(iteracoes)
             # Verificação
             f_x = solve_func(x, func)
+            x = np.asarray([x])
+            f_x = np.asarray([f_x])
             output_txt.write("iteracoes="+str(len(iteracoes))+",x="+str(x)+",f(x)="+str(f_x)+'\n')
         else:
             print("intervalo inválido")
             output_txt.write("intervalo invalido\n")
-        
 
     input_txt.close()
     output_txt.close()

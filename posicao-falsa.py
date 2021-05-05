@@ -29,13 +29,16 @@ def posicao_falsa(funcao, a, b, precisao):
         repeat = True
 
     # Loop
-    while(repeat and abs(a-b) > 10**-12):
+    while(repeat and abs(a-b) > 10**-12 and iteracao < 500):
         iteracao += 1
 
         # Escolher 0 entre pontos a e b
         # f_b - f_a != 0 (TRATAR ISSO)
-        c = (a*f_b-b*f_a)/(f_b-f_a)
-        f_c = solve_func(c, funcao)
+        if f_a-f_b != 0:
+            c = (a*f_b-b*f_a)/(f_b-f_a)
+            f_c = solve_func(c, funcao)
+        else:
+            return None, None
 
         if f_a*f_c < 0:
             b = c
@@ -51,10 +54,10 @@ def posicao_falsa(funcao, a, b, precisao):
             d_relativa = None
 
         it.append([iteracao, a, b, f_a, f_b, d_absoluta, d_relativa])
-        print("a "+str(a))
-        print("b "+str(b))
-        print(str(f_a))
-        print(str(f_b))
+        # print("a "+str(a))
+        # print("b "+str(b))
+        # print(str(f_a))
+        # print(str(f_b))
 
         repeat = False
         if (abs(f_a) > precisao and abs(f_b) > precisao):
@@ -65,11 +68,13 @@ def posicao_falsa(funcao, a, b, precisao):
 def main():
     input_txt = open('input-pos-falsa.txt', 'r')
     output_txt = open('output-pos-falsa.txt', 'w')
+    np.set_printoptions(precision=6)
+    np.set_printoptions(suppress=True)  
 
     for line in input_txt:
         if line[-1] == '\n':
             line = line[:-1]
-        output_txt.write(line+' ')
+        # output_txt.write(line+' ')
         line = line.split(',')
         func = line[0].split('=')[1]
         a = float(line[1].split('=')[1])
@@ -77,10 +82,16 @@ def main():
         precisao = float(line[3].split('=')[1])
 
         x, iteracoes = posicao_falsa(func, a, b, precisao)
-        iteracoes = np.asarray(iteracoes)
-        print(iteracoes)
-        f_x = solve_func(x, func)
-        output_txt.write("iteracoes="+str(len(iteracoes))+",x="+str(x)+",f(x)="+str(f_x)+'\n')
+        if x != None:
+            iteracoes = np.asarray(iteracoes)
+            # Verificação
+            f_x = solve_func(x, func)
+            x = np.asarray([x])
+            f_x = np.asarray([f_x])
+            output_txt.write("iteracoes="+str(len(iteracoes))+",x="+str(x)+",f(x)="+str(f_x)+'\n')
+        else:
+            print("intervalo inválido")
+            output_txt.write("intervalo invalido\n")
     
     input_txt.close()
     output_txt.close()

@@ -49,11 +49,13 @@ def secante(funcao, a, b, precisao):
 def main():
     input_txt = open('input-secante.txt', 'r')
     output_txt = open('output-secante.txt', 'w')
+    np.set_printoptions(precision=6)
+    np.set_printoptions(suppress=True)
 
     for line in input_txt:
         if line[-1] == '\n':
             line = line[:-1]
-        output_txt.write(line+' ')
+        # output_txt.write(line+' ')
         line = line.split(',')
         func = line[0].split('=')[1]
         a = float(line[1].split('=')[1])
@@ -63,9 +65,9 @@ def main():
         x, iteracoes = secante(func, a, b, precisao)
         if x != None:
             iteracoes = np.asarray(iteracoes)
-            # print(iteracoes)
-            # Verificação
             f_x = solve_func(x, func)
+            x = np.asarray([x])
+            f_x = np.asarray([f_x])
             output_txt.write("iteracoes="+str(len(iteracoes))+",x="+str(x)+",f(x)="+str(f_x)+'\n')
         else:
             print("intervalo inválido")
