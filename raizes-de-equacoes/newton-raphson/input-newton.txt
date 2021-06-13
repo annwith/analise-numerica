@@ -1,0 +1,1 @@
+funcao=x^2+x-6,funcder=2*x+1,a=1.5,precisao=0.001

@@ -1,0 +1,1 @@
+funcao=x^2+x-6,funcao_conv=(6-x)^(1/2),a=1.5,precisao=0.001 iteracoes=7,resultado=1.9998807918586459
