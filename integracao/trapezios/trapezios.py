@@ -9,6 +9,10 @@ def trapezios(pontos):
     y = pontos[:, 1]
     n = len(x)
 
+    if p == 1:
+        print("Erro! Intervalo inválido!")
+        return 0
+
     # e se houverem pontos cujo y é negativo?
     
     # calcular area
@@ -18,6 +22,13 @@ def trapezios(pontos):
         i += (y[j] + y[j+1])*abs(x[j] - x[j+1])/2
 
     print(i)
+    return i
+
+# recebe a funcao, a e b e o numero pontos
+# retorna os pontos
+def func_pontos(funcao, a, b, n):
+    return n
+
 
 p1 = [[0, 0.2], [0.4, 2.456], [0.8, 0.232]]
 p2 = [[0, 0.2], [0.2, 1.288], [0.4, 2.456], [0.6, 3.464], [0.8, 0.232]]
