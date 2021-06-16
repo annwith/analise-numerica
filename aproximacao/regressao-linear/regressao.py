@@ -7,48 +7,59 @@ import numpy as np
 
 '''
 Input: Lista de pontos
-Output: a1 e a0
+Output: a0, a1 e o coeficiente de correlação
 '''
-def regressao_linear(p):
-    p = np.asarray(p)
-    # print(p)
-    # print(p.shape)
+def regressao_linear(pontos):
+    p = np.asarray(pontos)
     x = p[:, 0]
     y = p[:, 1]
-    log_x = np.log10(x)
-    log_y = np.log10(y)
-    print(log_x)
-    print(log_y)
+
     n = p.shape[0]
-    # print(x*y)
-    def line(x, y):
-        # Cálculo da reta
-        a1 = n*np.sum(x*y) - np.sum(x)*np.sum(y)
-        a1 /= n*np.sum(x*x) - np.sum(x)**2
-        a0 = np.average(y) - a1*np.average(x)
 
-        # Coeficiente de correlação
-        r = n*np.sum(x*y) - np.sum(x)*np.sum(y)
-        r /= (n*np.sum(x*x) - np.sum(x)**2)**(1/2)
-        r /= (n*np.sum(y*y) - np.sum(y)**2)**(1/2)
-        
-        return a1, a0, r
+    # Cálculo da reta
+    a1 = n*np.sum(x*y) - np.sum(x)*np.sum(y)
+    a1 /= n*np.sum(x*x) - np.sum(x)**2
+    a0 = np.average(y) - a1*np.average(x)
 
-    # reta
-    a1, a0, r = line(x, y)
+    # Coeficiente de correlação
+    r = n*np.sum(x*y) - np.sum(x)*np.sum(y)
+    r /= (n*np.sum(x*x) - np.sum(x)**2)**(1/2)
+    r /= (n*np.sum(y*y) - np.sum(y)**2)**(1/2)
+
+    return a0, a1, r
+
+# e pra quadratica como fica?
+def potencia(pontos):
+    p = np.asarray(pontos)
+    p = np.log10(p)
+
+    a0, a1, r = regressao_linear(p)
+
+    log_a0 = np.log10(abs(a0))
+
+    if a0 < 0:
+        log_a0 *= -1
+    
+    print(log_a0)
     print(a1)
-    print(a0)
     print(r)
 
-    # potencia
-    a1, a0, r = line(log_x, log_y)
-    print(a1)
-    print(a0)
-    print(r)
+    # y = log_a0*x^a1
+    return log_a0, a1, r
 
-    # saturação
+def exponencial(pontos):
+    p = np.asarray(pontos)
+    p[:, 1] = np.log(p[:, 1])
 
-    # exponencial
+    a0, a1, r = regressao_linear(p)
+
+    pass
+
+def saturacao(pontos):
+    pass
+
+def predict(a0, a1, x):
+    return a0+a1*x
 
 p = [[1, 0.5],
     [2, 2.5],
@@ -65,4 +76,4 @@ q = [[1, 0.5],
     [5, 8.4],
     ]
 
-regressao_linear(q)
+potencia(q)
