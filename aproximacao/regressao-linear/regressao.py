@@ -28,17 +28,6 @@ def regressao_linear(pontos):
 
     return a0, a1, r
 
-def exponencial(pontos):
-    pontos = np.asarray(pontos)
-    pontos[:, 1] = np.log(pontos[:, 1])
-
-    a0, a1, r = regressao_linear(pontos)
-
-    pass
-
-def saturacao(pontos):
-    pass
-
 # tem que ter uma predição pra potencia tbm?
 def predicao(a0, a1, x, potencia):
     if potencia:
@@ -90,7 +79,6 @@ def main():
     else:
         pontos = np.asarray(pontos)
         if potencia:
-            print("Potencia!")
             pontos = np.log10(pontos)
             a0, a1, r = regressao_linear(pontos)
         else:
