@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Interpolação por diferenças divididas de Newton
 # Comparar com Lagrange: Tem que ser igual
@@ -18,7 +19,7 @@ def newton(pontos):
 
     l = []
     l.append(b)
-    print(l)
+    # print(l)
 
     # construção da arvore
     ind=0
@@ -30,7 +31,7 @@ def newton(pontos):
         l.append(b)
         ind += 1
 
-    print(l)
+    # print(l)
 
     # construção de b
     b = []
@@ -38,7 +39,7 @@ def newton(pontos):
     for i in range(len(l)):
         b.append([l[i][0]])
 
-    print(b)
+    # print(b)
 
     # construção de f
     termos = 1
@@ -50,7 +51,7 @@ def newton(pontos):
         fx.append(f)
         termos += 1
 
-    print(fx)
+    # print(fx)
 
     # Multiplica dois polinomios
     # A posição em p1 e p2 indica o grau e o valor o coeficiente: [-6, 1] = x-6
@@ -72,13 +73,13 @@ def newton(pontos):
         for j in range(1, len(fx[i])):
             p[i] = mul(p[i], np.asarray(fx[i][j]))
 
-    print(p)
+    # print(p)
 
     # multiplicar por b
     for i in range(n-1):
         p[i] *= b[i]
 
-    print(p)
+    # print(p)
 
     # somar tudo
     fx = []
@@ -91,16 +92,75 @@ def newton(pontos):
         for j in range(start, len(p)):
             fx[i] += p[j][i]
             print(p[j][i])
-    print(fx)
+    # print(fx)
 
     # não esquecer do b0
     fx[0] += y[0]
+    fx = np.asarray(fx)
     print(fx)
 
     return fx
 
+def predicao(a, x):
+    y = 0
+    for j in range(a.shape[0]):
+        y += a[j]*x**(j)
+    return y
 
-pontos = [[1, np.log(1)], [4, np.log(4)], [6, np.log(6)], [5, np.log(5)]]
-pontos = np.asarray(pontos)
+def mostrar_grafico(pontos, a):
+    # Data for plotting
+    pontos = np.asarray(pontos)
+    x = pontos[:, 0]
+    y = pontos[:, 1]
 
-newton(pontos)
+    # Data for plotting
+    xl = np.arange(x[0], x[-1], 0.01)
+    yl = np.zeros_like(xl)
+    for i in range(xl.shape[0]):
+        aux = 0
+        for j in range(a.shape[0]):
+            aux += a[j]*xl[i]**(j)
+        yl[i] = aux
+
+    fig, ax = plt.subplots()
+    ax.plot(x, y, 'o')
+    ax.plot(xl, yl)
+
+    ax.set(xlabel='x', ylabel='y')
+    ax.grid()
+
+    fig.savefig("newton.png")
+    plt.show()
+
+def main():
+    input_file = open('input.txt', 'r')
+    output_file = open('output.txt', 'w')
+    pontos = []
+    predict = False
+    for l in input_file:
+            l = l.split()
+            l = [float(i) for i in l]
+            if len(l) == 2:
+                pontos.append(l)
+            # predicao
+            elif len(l) > 2:
+                predict = True
+                a = l
+    
+    if predict:
+        a = np.asarray(a)
+        y = predicao(a[:-1], a[-1])
+        output_file.write(str(y))
+    else:
+        pontos = np.asarray(pontos)
+        a = newton(pontos)
+
+        for i in range(a.shape[0]):
+            output_file.write("a"+str(i)+" = "+str(a[i])+"\n")
+
+        mostrar_grafico(pontos, a)
+    
+    input_file.close()
+    output_file.close()
+
+main()
