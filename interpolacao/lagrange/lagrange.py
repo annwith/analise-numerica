@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 # quando adiciona um ponto tem que fazer tudo de novo
 def lagrange(pontos):
@@ -6,8 +7,8 @@ def lagrange(pontos):
     y = pontos[:, 1]
     n = len(x) # numero de pontos
 
-    print(x)
-    print(y)
+    # print(x)
+    # print(y)
 
     l = np.zeros((n, n-1, 2), dtype=np.float64)
     divisor = np.ones((n), dtype=np.float64)
@@ -23,8 +24,8 @@ def lagrange(pontos):
                 divisor[i] *= x[i]-x[j]
                 ind += 1
 
-    print(l)
-    print(divisor)
+    # print(l)
+    # print(divisor)
 
     # Multiplica dois polinomios
     # A posição em p1 e p2 indica o grau e o valor o coeficiente: [-6, 1] = x-6
@@ -46,28 +47,87 @@ def lagrange(pontos):
             p[i] = mul(p[i], l[i][j])
     
     p = np.asarray(p)
-    print(p)
+    # print(p)
 
     # dividindo os polinomios pelo valor que eles devem ser divididos
     for i in range(n):
         p[i] /= divisor[i]
         # p[i] *= y[i]
 
-    print(p)
+    # print(p)
 
     # multiplicando os polinomios por y
     for i in range(n):
         p[i] *= y[i]
 
-    print(p)
+    # print(p)
 
     # fazendo a soma
     p = np.sum(p, axis=0)
-    print(p)
+    # print(p)
 
     return p
 
-pontos = [[1, np.log(1)], [4, np.log(4)], [6, np.log(6)], [5, np.log(5)]]
-pontos = np.asarray(pontos)
+def predicao(a, x):
+    y = 0
+    for j in range(a.shape[0]):
+        y += a[j]*x**(j)
+    return y
 
-lagrange(pontos)
+def mostrar_grafico(pontos, a):
+    # Data for plotting
+    pontos = np.asarray(pontos)
+    x = pontos[:, 0]
+    y = pontos[:, 1]
+
+    # Data for plotting
+    xl = np.arange(x[0], x[-1], 0.01)
+    yl = np.zeros_like(xl)
+    for i in range(xl.shape[0]):
+        aux = 0
+        for j in range(a.shape[0]):
+            aux += a[j]*xl[i]**(j)
+        yl[i] = aux
+
+    fig, ax = plt.subplots()
+    ax.plot(x, y, 'o')
+    ax.plot(xl, yl)
+
+    ax.set(xlabel='x', ylabel='y')
+    ax.grid()
+
+    fig.savefig("lagrange.png")
+    plt.show()
+
+def main():
+    input_file = open('input.txt', 'r')
+    output_file = open('output.txt', 'w')
+    pontos = []
+    predict = False
+    for l in input_file:
+            l = l.split()
+            l = [float(i) for i in l]
+            if len(l) == 2:
+                pontos.append(l)
+            # predicao
+            elif len(l) > 2:
+                predict = True
+                a = l
+    
+    if predict:
+        a = np.asarray(a)
+        y = predicao(a[:-1], a[-1])
+        output_file.write(str(y))
+    else:
+        pontos = np.asarray(pontos)
+        a = lagrange(pontos)
+
+        for i in range(a.shape[0]):
+            output_file.write("a"+str(i)+" = "+str(a[i])+"\n")
+
+        mostrar_grafico(pontos, a)
+    
+    input_file.close()
+    output_file.close()
+
+main()
