@@ -56,7 +56,7 @@ def funcao_pontos(funcao, a, b, segmentos):
 
 # n é uma lista de numeros de pontos
 # ou seria a integração de romberg (reaproveitamento de richards)
-def arvore_richards(funcao, a, b, lista_segmentos):
+def romberg(funcao, a, b, lista_segmentos):
     r = np.zeros((len(lista_segmentos), len(lista_segmentos)))
     h = []
     for i in range(len(lista_segmentos)):
@@ -64,8 +64,8 @@ def arvore_richards(funcao, a, b, lista_segmentos):
         r[i][0] = trapezios(np.asarray(pontos)) # passa os pontos para uma funcao de integração)
         h.append(distancia)
  
-    print(h)
-    print(np.asarray(r))
+    # print(h)
+    # print(np.asarray(r))
 
     # finalizar construção da arvore
     for i in range(1, r.shape[0]):
@@ -74,16 +74,28 @@ def arvore_richards(funcao, a, b, lista_segmentos):
 
     print(r)
 
-    return r, h
+    return r[0][-1]
 
-# faz a melhor integração possível dados os pontos
-# def integracao():
+def main():
+    input_file = open('input.txt', 'r')
+    output_file = open('output.txt', 'w')
+    segmentos = []
+    for l in input_file:
+        l = l.split()
+        funcao = l[0]
+        a = float(l[1])
+        b = float(l[2])
+        for i in range(3, len(l)):
+            segmentos.append(int(l[i]))
+    
+    i = romberg(funcao, a, b, segmentos)
 
-# adiciona mais um h na árvore
-# def add_arvore(arvore, i, h):
+    output_file.write(str(i))
 
-funcao = "0.2 + 25*x - 200*x^2 + 675*x^3 - 900*x^4 + 400*x^5"
-arvore_richards(funcao, 0, 0.8, [1, 2, 4, 8])
+    input_file.close()
+    output_file.close()
+
+main()
 
 # a ordem dos segmentos importa?
 # é possível tirar e colocar segmentos? se sim só da ultima posicao, como uma pilha correto?

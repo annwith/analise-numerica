@@ -1,4 +1,5 @@
 import numpy as np
+from utils import solve_func
 
 # como verificar número válido de pontos?
 # intervalo igual entre os pontos
@@ -27,12 +28,56 @@ def simpson38(pontos):
     i *= abs(x[0]-x[p-1]) # multiplicar pela largura
     i /= 8*n # dividir pelo numero de vezes que aplicamos simpson
 
-    print(i)
     return i
 
-p1 = [[0, 0.2], [0.2667, 1.432724], [0.5333, 3.487177], [0.8, 0.232]]
-p2 = [[0, 0.2], [0.2, 1.288], [0.4, 2.456], [0.6, 3.464], [0.8, 0.232]]
-p1 = np.asarray(p1)
-p2 = np.asarray(p2)
-simpson38(p1)
-simpson38(p2)
+# recebe a funcao, a e b e o numero de segmentos
+# retorna os pontos
+def funcao_pontos(funcao, a, b, segmentos):
+    # garantir a < b
+    if a > b:
+        a, b = b, a
+
+    pontos = []
+    h = abs(a-b)/(segmentos)
+
+    pontos.append([a, solve_func(a, funcao)])
+    for i in range(1, segmentos):
+        pontos.append([a+i*h, solve_func(a+i*h, funcao)])
+    pontos.append([b, solve_func(b, funcao)])
+
+    return pontos
+
+def main():
+    input_file = open('input.txt', 'r')
+    output_file = open('output.txt', 'w')
+    pontos = []
+    funcao = False
+    for l in input_file:
+        if l == "funcao\n":
+            funcao = True
+            continue
+        if not funcao:
+            l = l.split()
+            l = [float(i) for i in l]
+            pontos.append(l)
+        else:
+            l = l.split()
+            funcao = l[0]
+            a = float(l[1])
+            b = float(l[2])
+            segmentos = int(l[3])
+    
+    if funcao:
+        pontos = funcao_pontos(funcao, a, b, segmentos)
+        pontos = np.asarray(pontos)
+        i = simpson38(pontos)
+    else:
+        pontos = np.asarray(pontos)
+        i = simpson38(pontos)
+
+    output_file.write(str(i))
+
+    input_file.close()
+    output_file.close()
+
+main()
