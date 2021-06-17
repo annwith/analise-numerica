@@ -1,23 +1,30 @@
 import numpy as np
 from utils import solve_func
 
-def trapezios(pontos):
+# fácil de escolher intervalos e bom, pouca diferença pro 38
+def simpson13(pontos):
     # pontos ordenados por x
     x = pontos[:, 0]
     y = pontos[:, 1]
-    p = len(x)
+    p = len(x)  # numero de pontos
 
-    if p == 1:
+    # verificar numero impar de pontos
+    if p == 1 or p % 2 == 0:
         print("Erro! Intervalo inválido!")
         return 0
 
-    # e se houverem pontos cujo y é negativo?
-    
-    # calcular area
+    # explicar como escolhi achar o n
+    n = (p-1)/2 # numero de vezes que dá pra aplicar simpson
+
     i = 0
-    # escolhi fazer assim pq funcionaria para um h diferente
-    for j in range(0, p-1):
-        i += (y[j] + y[j+1])*abs(x[j] - x[j+1])/2
+    for j in range(1, p-1, 2):
+        i += 4*y[j] 
+    for j in range(2, p-2, 2):
+        i += 2*y[j]
+    i += y[0]
+    i += y[p-1]
+    i *= abs(x[0]-x[p-1])
+    i /= 6*n
 
     return i
 
@@ -61,7 +68,7 @@ def romberg(funcao, a, b, lista_segmentos):
     h = []
     for i in range(len(lista_segmentos)):
         pontos, distancia = funcao_pontos(funcao, a, b, lista_segmentos[i]) # retorna [pontos, h]
-        r[i][0] = trapezios(np.asarray(pontos)) # passa os pontos para uma funcao de integração)
+        r[i][0] = simpson13(np.asarray(pontos)) # passa os pontos para uma funcao de integração)
         h.append(distancia)
  
     # print(h)
