@@ -4,17 +4,17 @@ Erro: sum(ymedido - ymodelo)²
 Minimizar o erro
 '''
 import numpy as np
+import matplotlib.pyplot as plt
 
 '''
 Input: Lista de pontos
 Output: a0, a1 e o coeficiente de correlação
 '''
 def regressao_linear(pontos):
-    p = np.asarray(pontos)
-    x = p[:, 0]
-    y = p[:, 1]
+    x = pontos[:, 0]
+    y = pontos[:, 1]
 
-    n = p.shape[0]
+    n = pontos.shape[0]
 
     # Cálculo da reta
     a1 = n*np.sum(x*y) - np.sum(x)*np.sum(y)
@@ -28,52 +28,81 @@ def regressao_linear(pontos):
 
     return a0, a1, r
 
-# e pra quadratica como fica?
-def potencia(pontos):
-    p = np.asarray(pontos)
-    p = np.log10(p)
-
-    a0, a1, r = regressao_linear(p)
-
-    log_a0 = np.log10(abs(a0))
-
-    if a0 < 0:
-        log_a0 *= -1
-    
-    print(log_a0)
-    print(a1)
-    print(r)
-
-    # y = log_a0*x^a1
-    return log_a0, a1, r
-
 def exponencial(pontos):
-    p = np.asarray(pontos)
-    p[:, 1] = np.log(p[:, 1])
+    pontos = np.asarray(pontos)
+    pontos[:, 1] = np.log(pontos[:, 1])
 
-    a0, a1, r = regressao_linear(p)
+    a0, a1, r = regressao_linear(pontos)
 
     pass
 
 def saturacao(pontos):
     pass
 
-def predict(a0, a1, x):
-    return a0+a1*x
+# tem que ter uma predição pra potencia tbm?
+def predicao(a0, a1, x, potencia):
+    if potencia:
+        return 10**(a0 + a1*np.log10(x)) # log 
+    return a0 + a1*x
 
-p = [[1, 0.5],
-    [2, 2.5],
-    [3, 2.0],
-    [4, 4.0],
-    [5, 3.5],
-    [6, 6.0],
-    [7, 5.5]]
+def mostrar_grafico(pontos, a0, a1):
+    # Data for plotting
+    x = pontos[:, 0]
+    y = pontos[:, 1]
 
-q = [[1, 0.5],
-    [2, 1.7],
-    [3, 3.4],
-    [4, 5.7],
-    [5, 8.4],
-    ]
+    # Data for plotting
+    xl = np.array((x[0], x[-1]))
+    yl = a0 + xl*a1
 
-potencia(q)
+    fig, ax = plt.subplots()
+    ax.plot(x, y, 'o')
+    ax.plot(xl, yl)
+
+    ax.set(xlabel='x', ylabel='y')
+    ax.grid()
+
+    fig.savefig("regressao.png")
+    plt.show()
+
+def main():
+    input_file = open('input.txt', 'r')
+    output_file = open('output.txt', 'w')
+    pontos = []
+    predict = False
+    potencia = False
+    for l in input_file:
+        if l == "potencia\n":
+            potencia = True
+        else:
+            l = l.split()
+            l = [float(i) for i in l]
+            if len(l) == 3:
+                a0 = l[0] 
+                a1 = l[1]
+                x = l[2]
+                predict = True
+            elif len(l) == 2:
+                pontos.append(l)
+    
+    if predict:
+        y = predicao(a0, a1, x, potencia)
+        output_file.write(str(y))
+    else:
+        pontos = np.asarray(pontos)
+        if potencia:
+            print("Potencia!")
+            pontos = np.log10(pontos)
+            a0, a1, r = regressao_linear(pontos)
+        else:
+            a0, a1, r = regressao_linear(pontos)
+
+        output_file.write("a0 = "+str(a0)+"\n")
+        output_file.write("a1 = "+str(a1)+"\n")
+        output_file.write("r = "+str(r)+"\n")
+
+        mostrar_grafico(pontos, a0, a1)
+    
+    input_file.close()
+    output_file.close()
+
+main()
