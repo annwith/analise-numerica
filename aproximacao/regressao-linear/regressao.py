@@ -5,9 +5,10 @@ Minimizar o erro
 '''
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 '''
-Input: Lista de pontos
+Input: NumPy array de pontos
 Output: a0, a1 e o coeficiente de correlação
 '''
 def regressao_linear(pontos):
@@ -28,12 +29,23 @@ def regressao_linear(pontos):
 
     return a0, a1, r
 
-# tem que ter uma predição pra potencia tbm?
-def predicao(a0, a1, x, potencia):
+'''
+Input: Coeficiente linear, coeficiente angular, x, potencia(True or False)
+Output: f(x)
+'''
+def predicao(a0, a1, x, potencia, exponencial, saturacao):
     if potencia:
-        return 10**(a0 + a1*np.log10(x)) # log 
+        return 10**(a0 + a1*np.log10(x)) 
+    if exponencial:
+        return math.e**(a0+a1*x) 
+    if saturacao:
+        return 1/(a0 + a1*(1/x)) 
     return a0 + a1*x
 
+'''
+Input: NumPy array de pontos, coef. linear e coef. angular
+Output: Gráfico com os pontos e a reta
+'''
 def mostrar_grafico(pontos, a0, a1):
     # Data for plotting
     x = pontos[:, 0]
@@ -59,9 +71,15 @@ def main():
     pontos = []
     predict = False
     potencia = False
+    exponencial = False
+    saturacao = False
     for l in input_file:
         if l == "potencia\n":
             potencia = True
+        elif l == "exponencial\n":
+            exponencial = True
+        elif l == "saturacao\n":
+            saturacao = True
         else:
             l = l.split()
             l = [float(i) for i in l]
@@ -74,12 +92,18 @@ def main():
                 pontos.append(l)
     
     if predict:
-        y = predicao(a0, a1, x, potencia)
+        y = predicao(a0, a1, x, potencia, exponencial, saturacao)
         output_file.write(str(y))
     else:
         pontos = np.asarray(pontos)
         if potencia:
             pontos = np.log10(pontos)
+            a0, a1, r = regressao_linear(pontos)
+        if exponencial:
+            pontos[:, 1] = np.log(pontos[:, 1])
+            a0, a1, r = regressao_linear(pontos)
+        if saturacao:
+            pontos = 1/pontos
             a0, a1, r = regressao_linear(pontos)
         else:
             a0, a1, r = regressao_linear(pontos)
