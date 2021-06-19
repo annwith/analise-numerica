@@ -25,7 +25,8 @@ def mostrar_grafico(pontos, a):
     y = pontos[:, 1]
 
     # Data for plotting
-    xl = np.arange(x[0], x[-1], 0.01)
+    h_grafico = abs(x[0]-x[-1])/100
+    xl = np.arange(x[0], x[-1], h_grafico)
     yl = np.zeros_like(xl)
     for i in range(xl.shape[0]):
         aux = 0
@@ -77,16 +78,6 @@ def discreto(pontos, m):
 
     return a
 
-    # testar quão os coeficientes estão bons
-
-    # Resolver esse sistema linear
-    # Gauss, LU, Jacobi, Gauss-Seidel
-    # Verificar qual método utilizar
-    # Fazer verificações sobre a matriz
-    # Pivoteamento, Etc
-
-    # Testar o resultado final
-
 def predicao(a, x):
     y = 0
     for j in range(a.shape[0]):
@@ -99,16 +90,16 @@ def main():
     pontos = []
     predict = False
     for l in input_file:
-            l = l.split()
-            l = [float(i) for i in l]
-            if len(l) == 1:
-                m = int(l[0])
-            elif len(l) == 2:
-                pontos.append(l)
-            # predicao
-            elif len(l) > 2:
-                predict = True
-                a = l
+        l = l.split()
+        l = [float(i) for i in l]
+        if len(l) == 1:
+            m = int(l[0])
+        elif len(l) == 2:
+            pontos.append(l)
+        # predicao
+        elif len(l) > 2:
+            predict = True
+            a = l
     
     if predict:
         a = np.asarray(a)

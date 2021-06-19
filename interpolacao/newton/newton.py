@@ -114,7 +114,8 @@ def mostrar_grafico(pontos, a):
     y = pontos[:, 1]
 
     # Data for plotting
-    xl = np.arange(x[0], x[-1], 0.01)
+    h_grafico = abs(x[0]-x[-1])/100
+    xl = np.arange(x[0], x[-1], h_grafico)
     yl = np.zeros_like(xl)
     for i in range(xl.shape[0]):
         aux = 0
@@ -138,14 +139,14 @@ def main():
     pontos = []
     predict = False
     for l in input_file:
-            l = l.split()
-            l = [float(i) for i in l]
-            if len(l) == 2:
-                pontos.append(l)
-            # predicao
-            elif len(l) > 2:
-                predict = True
-                a = l
+        l = l.split()
+        l = [float(i) for i in l]
+        if len(l) == 2:
+            pontos.append(l)
+        # predicao
+        elif len(l) > 2:
+            predict = True
+            a = l
     
     if predict:
         a = np.asarray(a)
