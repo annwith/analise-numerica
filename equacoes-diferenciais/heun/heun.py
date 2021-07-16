@@ -13,18 +13,10 @@ def heun(func, variables, values, i, h):
     aux[i] = preditor      # variavel em questao
     f2 = solve_diferential_function(variables, aux, func)
     corretor = values[i] + ((f1+f2)/2)*h
-    compar = preditor
-    # c = 0
-    # qual diferença isso realmente faz?
     for c in range(15):
-    # while(abs(corretor-compar)>0.01):
-        compar = corretor
         aux[i] = corretor
         f2 = solve_diferential_function(variables, aux, func)*h
         corretor = values[i] + ((f1+f2)/2)*h
-        # c += 1
-        # if c > 15:
-        #     break
 
     return corretor
 
