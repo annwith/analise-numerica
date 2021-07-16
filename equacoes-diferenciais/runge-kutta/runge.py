@@ -3,23 +3,6 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
-# método de passo único direto
-def runge(funcao, x_i, x_f, y_i, h):
-    pontos = []
-    pontos.append([x_i, y_i])
-
-    while(x_i < x_f):
-        # print(x_i)
-        k1 = solve_dif_func(x_i, y_i, funcao)
-        k2 = solve_dif_func(x_i+(1/2)*h, y_i+(1/2)*h*k1, funcao)
-        k3 = solve_dif_func(x_i+(1/2)*h, y_i+(1/2)*h*k2, funcao)
-        k4 = solve_dif_func(x_i+h, y_i+h*k3, funcao)
-        y_i = y_i + (1/6)*(k1+2*k2+2*k3+k4)*h
-        x_i += h
-        pontos.append([x_i, y_i])
-
-    return pontos
-
 def solve_system_runge(functions, variables, values, x_f, h):
     pontos = []
     for value in values:
@@ -118,12 +101,18 @@ def main():
         initial_values[i] = float(initial_values[i])
     xf = float(lines[3].split()[0])
     h = float(lines[4].split()[0])
-    
+    y_grafico = int(lines[5].split()[0])
+
     pontos = solve_system_runge(functions, variables, initial_values, xf, h)
     print(pontos)
-    mostrar_grafico(pontos)
+    x = pontos[:, 0]
+    y = pontos[:, y_grafico]
+    grafico = np.concatenate((x, y))
+    grafico = np.reshape(grafico, (x.shape[0], 2), order='F')
+    mostrar_grafico(grafico)
 
-    output_file.write(str(pontos[-1][1])+"\n")
+    for i in range(len(variables)):
+        output_file.write(variables[i]+": "+str(pontos[-1][i])+"\n")
 
     input_file.close()
     output_file.close()

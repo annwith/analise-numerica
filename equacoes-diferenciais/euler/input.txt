@@ -1,5 +1,5 @@
-z y+E^x
-x y z
+z y+E^a
+a y z
 0 1 0
 0.2
 0.1

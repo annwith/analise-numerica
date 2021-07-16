@@ -3,34 +3,6 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
-# método iterativo
-def heun_method(funcao, x_i, x_f, y_i, h):
-    pontos = []
-    pontos.append([x_i, y_i])
-
-    # iterar até a diferença entre as iterações diminuir
-    while(x_i < x_f):
-        f_1 = solve_dif_func(x_i, y_i, funcao)
-        y_i_1 = y_i + f_1*h
-        x_i_1 = x_i + h
-        y_i_ant = math.inf
-        
-        i = 0
-        for i in range(15):
-            y_i_ant = y_i_1
-            f_2 = solve_dif_func(x_i_1, y_i_1, funcao)*h
-            y_i_1 = y_i + ((f_1+f_2)/2)*h
-            if i > 14:
-                print(i)
-                break
-            i += 1
-        
-        y_i = y_i_1
-        x_i += h
-        pontos.append([x_i, y_i])
-
-    return np.asarray(pontos)
-
 # retorna apenas o proximo valor
 def heun(func, variables, values, i, h):
     # iterar até a diferença entre as iterações diminuir
@@ -132,12 +104,18 @@ def main():
         initial_values[i] = float(initial_values[i])
     xf = float(lines[3].split()[0])
     h = float(lines[4].split()[0])
-    
+    y_grafico = int(lines[5].split()[0])
+
     pontos = solve_system_heun(functions, variables, initial_values, xf, h)
     print(pontos)
-    mostrar_grafico(pontos)
+    x = pontos[:, 0]
+    y = pontos[:, y_grafico]
+    grafico = np.concatenate((x, y))
+    grafico = np.reshape(grafico, (x.shape[0], 2), order='F')
+    mostrar_grafico(grafico)
 
-    output_file.write(str(pontos[-1][1])+"\n")
+    for i in range(len(variables)):
+        output_file.write(variables[i]+": "+str(pontos[-1][i])+"\n")
 
     input_file.close()
     output_file.close()
