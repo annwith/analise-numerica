@@ -1,5 +1,7 @@
-from utils import solve_dif_func
+from utils import *
 import math
+import numpy as np
+import matplotlib.pyplot as plt
 
 # método de passo único direto
 def ralston(funcao, x_i, x_f, y_i, h):
@@ -15,6 +17,21 @@ def ralston(funcao, x_i, x_f, y_i, h):
 
     return pontos
 
+def mostrar_grafico(pontos):
+    pontos = np.asarray(pontos)
+    # Data for plotting
+    x = pontos[:, 0]
+    y = pontos[:, 1]
+
+    fig, ax = plt.subplots()
+    ax.plot(x, y, 'o')
+
+    ax.set(xlabel='x', ylabel='y')
+    ax.grid()
+
+    fig.savefig("image.png")
+    plt.show()
+
 def main():
     input_file = open('input.txt', 'r')
     output_file = open('output.txt', 'w')
@@ -26,10 +43,11 @@ def main():
         yi = float(l[3].split('=')[1])
         h = float(l[4].split('=')[1])
     
-    pontos = euler(funcao, xi, xf, yi, h)
+    pontos = ralston(funcao, xi, xf, yi, h)
+    print(pontos)
     mostrar_grafico(pontos)
 
-    output_file.write(str(pontos[-1][y])+"\n")
+    output_file.write(str(pontos[-1][1])+"\n")
 
     input_file.close()
     output_file.close()

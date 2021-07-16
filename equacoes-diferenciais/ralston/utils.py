@@ -11,6 +11,11 @@ def solve_dif_func(x, y, func):
     func = func.replace('y', str(y))
     return func_parser(func)
 
+def solve_diferential_function(variables, values, func):
+    for i in range(len(variables)):
+        func = func.replace(variables[i], str(values[i]))
+    return func_parser(func)
+
 # Definir se existe 0 em um intervalo
 def intervalo_zero(funcao, a, b):
     if solve_func(a, funcao) * solve_func(b, funcao) < 0:

@@ -1,4 +1,4 @@
-from utils import solve_dif_func
+from utils import *
 import math
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,6 +17,49 @@ def runge(funcao, x_i, x_f, y_i, h):
         y_i = y_i + (1/6)*(k1+2*k2+2*k3+k4)*h
         x_i += h
         pontos.append([x_i, y_i])
+
+    return pontos
+
+def solve_system_runge(functions, variables, values, x_f, h):
+    pontos = []
+    for value in values:
+        pontos.append(value)
+    
+    # constantes
+    k = np.zeros((4, len(variables)-1))
+    
+    while(values[0] < x_f):
+        aux = []
+        aux.append(values[0])
+        # definir constantes
+        for i in range(len(variables)-1):
+            k[0][i] = h*solve_diferential_function(variables, values, functions[i])
+        aux[0] = values[0]+h/2
+        for j in range(len(variables)-1):
+            aux.append(values[j+1]+k[0][j]/2)
+        for i in range(len(variables)-1):
+            k[1][i] = h*solve_diferential_function(variables, aux, functions[i])
+        for j in range(len(variables)-1):
+            aux[j+1] = values[j+1]+k[1][j]/2
+        for i in range(len(variables)-1):
+            k[2][i] = h*solve_diferential_function(variables, aux, functions[i])
+        aux[0] = values[0]+h
+        for j in range(len(variables)-1):
+            aux[j+1] = values[j+1]+k[2][j]
+        for i in range(len(variables)-1):
+            k[3][i] = h*solve_diferential_function(variables, aux, functions[i])
+        
+        for i in range(len(variables)-1):
+            aux[i+1] = values[i+1] + (k[0][i]+2*k[1][i]+2*k[2][i]+k[3][i])/6
+
+        # só atualiza os valores juntos
+        for i in range(len(aux)):
+            values[i] = aux[i]
+        for value in values:
+            pontos.append(value)
+    
+    pontos = np.asarray(pontos)
+    pontos = np.reshape(pontos, (int(len(pontos)/len(values)), len(values)))
 
     return pontos
 
@@ -64,13 +107,25 @@ def mostrar_grafico(pontos):
     fig.savefig("image.png")
     plt.show()
 
+def main():
+    input_file = open('input.txt', 'r')
+    output_file = open('output.txt', 'w')
+    lines = input_file.readlines()
+    functions = lines[0].split()
+    variables = lines[1].split()
+    initial_values = lines[2].split()
+    for i in range(len(initial_values)):
+        initial_values[i] = float(initial_values[i])
+    xf = float(lines[3].split()[0])
+    h = float(lines[4].split()[0])
+    
+    pontos = solve_system_runge(functions, variables, initial_values, xf, h)
+    print(pontos)
+    mostrar_grafico(pontos)
 
-funcao2 = "4*E^(0.8*x)-0.5*y"
-funcao1 = "-2*x^3+12*x^2-20*x+8.5"
-funcao3 = "(2000-2*y)/(200-x)"
+    output_file.write(str(pontos[-1][1])+"\n")
 
-p = grade_adaptativa(funcao3, 0, 50, 0, 1, 0.1)
-mostrar_grafico(p)
-print(p)
+    input_file.close()
+    output_file.close()
 
-f1 = ["4*E^(0.8*x)-0.5*y"]
+main()
