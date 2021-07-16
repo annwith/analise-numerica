@@ -66,7 +66,7 @@ def mostrar_grafico(pontos):
     ax.set(xlabel='x', ylabel='y')
     ax.grid()
 
-    fig.savefig("runge.png")
+    fig.savefig("image.png")
     plt.show()
 
 def main():

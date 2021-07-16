@@ -76,6 +76,7 @@ def main():
 
     for i in range(len(variables)):
         output_file.write(variables[i]+": "+str(pontos[-1][i])+"\n")
+    output_file.write("\n"+str(pontos))
 
     input_file.close()
     output_file.close()
